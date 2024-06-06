@@ -29,11 +29,10 @@ class Tipo_usuario(models.Model):
 class Ubicacion(models.Model):
     id_ubicacion = models.AutoField(primary_key=True)
     nombre_region = models.CharField(max_length=50, blank=False, null=False)
-    nombre_ciudad = models.CharField(max_length=50,blank=False, null=False)
     nombre_comuna = models.CharField(max_length=50, blank=False, null=False)
-
+#se saca la variable nombre_ciudad ya que no era necesaria para la aplicación de la app
     def __str__(self):
-        return f"{self.nombre_comuna}, {self.nombre_ciudad}, {self.nombre_region}"
+        return f"{self.nombre_comuna}, {self.nombre_region}"
 
 
 class Direccion(models.Model):
@@ -65,13 +64,13 @@ class Inmuebles(models.Model):
     id_user = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     descripcion = models.TextField()
-    m2_construidos = models.DecimalField(max_digits=10, decimal_places=2)
-    m2_terreno = models.DecimalField(max_digits=10, decimal_places=2)
+    m2_construidos = models.IntegerField(default=0)
+    m2_terreno = models.IntegerField(default=0)
     n_estacionamientos = models.IntegerField()
     n_banos = models.IntegerField()
     n_habitaciones = models.IntegerField()
     tipo_inmueble = models.ForeignKey(Tipo_inmueble, on_delete=models.CASCADE)
-    precio_mensual = models.DecimalField(max_digits=10, decimal_places=2)
+    precio_mensual = models.IntegerField(default=0)
     id_direccion = models.ForeignKey(Direccion, on_delete=models.CASCADE)
     CHOICES = [
         ('Disponible', 'Disponible'),

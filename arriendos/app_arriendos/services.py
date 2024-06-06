@@ -1,10 +1,9 @@
 from app_arriendos.models import Usuarios, Direccion, Ubicacion, Tipo_usuario
 
-def crear_usuario(rut: str, nombre: str, apellido: str, calle: str, numero: str, depto: str, region: str, ciudad: str, comuna: str, tipo_usuario: str, telefono: str, correo: str) -> Usuarios:
+def crear_usuario(rut: str, nombre: str, apellido: str, calle: str, numero: str, depto: str, region: str, comuna: str, tipo_usuario: str, telefono: str, correo: str) -> Usuarios:
     # Crear o obtener la ubicación
     ubicacion, created = Ubicacion.objects.get_or_create(
         nombre_region=region,
-        nombre_ciudad=ciudad,
         nombre_comuna=comuna
     )
     
@@ -32,10 +31,6 @@ def crear_usuario(rut: str, nombre: str, apellido: str, calle: str, numero: str,
     
     return usuario
 
-# Ejemplo de uso:
-# usuario = crear_usuario('12345678-9', 'Juan', 'Pérez', 'Av. Siempre Viva', '742', '', 'Región Metropolitana', 'Santiago', 'Las Condes', 'Arrendador', '123456789', 'juan.perez@example.com')
-# print(f'Usuario creado: {usuario.nombre} {usuario.apellido}')
-
 #listar usuarios
 def listar_usuarios():
     usuarios = Usuarios.objects.select_related('tipo_usuario').all()
@@ -44,7 +39,7 @@ def listar_usuarios():
 
 
 #actualizar usuario
-def actualizar_usuario(rut: str, nombre: str = None, apellido: str = None, calle: str = None, numero: str = None, depto: str = None, region: str = None, ciudad: str = None, comuna: str = None, tipo_usuario: str = None, telefono: str = None, correo: str = None):
+def actualizar_usuario(rut: str, nombre: str = None, apellido: str = None, calle: str = None, numero: str = None, depto: str = None, region: str = None, comuna: str = None, tipo_usuario: str = None, telefono: str = None, correo: str = None):
     try:
         # Buscar el usuario por su RUT
         usuario = Usuarios.objects.get(rut=rut)
@@ -63,7 +58,7 @@ def actualizar_usuario(rut: str, nombre: str = None, apellido: str = None, calle
             usuario.tipo_usuario = tipo_usuario_obj
         
         # Actualizar la dirección si se proporcionan nuevos valores
-        if calle or numero or depto or region or ciudad or comuna:
+        if calle or numero or depto or region or comuna:
             direccion = usuario.id_direccion
             if calle:
                 direccion.calle = calle
@@ -72,12 +67,10 @@ def actualizar_usuario(rut: str, nombre: str = None, apellido: str = None, calle
             if depto is not None:
                 direccion.depto = depto
             
-            if region or ciudad or comuna:
+            if region or comuna:
                 ubicacion = direccion.id_ubicacion
                 if region:
                     ubicacion.nombre_region = region
-                if ciudad:
-                    ubicacion.nombre_ciudad = ciudad
                 if comuna:
                     ubicacion.nombre_comuna = comuna
                 ubicacion.save()
