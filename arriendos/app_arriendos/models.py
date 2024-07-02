@@ -30,7 +30,7 @@ class Ubicacion(models.Model):
     id_ubicacion = models.AutoField(primary_key=True)
     nombre_region = models.CharField(max_length=50, blank=False, null=False)
     nombre_comuna = models.CharField(max_length=50, blank=False, null=False)
-#se saca la variable nombre_ciudad ya que no era necesaria para la aplicación de la app
+
     def __str__(self):
         return f"{self.nombre_comuna}, {self.nombre_region}"
 
@@ -47,16 +47,18 @@ class Direccion(models.Model):
 
 
 class Usuarios(models.Model):
+    usuario = models.OneToOneField('auth.User',on_delete=models.CASCADE, default=1)
+    tipo_usuario = models.ForeignKey('Tipo_usuario', on_delete=models.CASCADE)
     rut = models.CharField(max_length=12, primary_key=True)
     nombre = models.CharField(max_length=50, blank=False, null=False)
     apellido = models.CharField(max_length=50, blank=False, null=False)
     id_direccion = models.ForeignKey(Direccion, on_delete=models.CASCADE)
-    tipo_usuario = models.ForeignKey(Tipo_usuario, on_delete=models.CASCADE)
     telefono = models.CharField(max_length=15, blank=False, null=False)
     correo = models.EmailField()
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+        return self.usuario.username
+        #return f"{self.nombre} {self.apellido} {self.usuario}
 
 
 class Inmuebles(models.Model):
